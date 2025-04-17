@@ -11,27 +11,27 @@ const objects = [
   {
     label: 'LIGHTER',
     distance: 3, // distance lighter - camera. Decrease to zoom-in.
-                 // The object should be fully visible
-    trainingSets:[
+    // The object should be fully visible
+    trainingSets: [
       {
         meshes: [
           // meshes alternatives:
           meshPath + 'lighterShort.glb',
           meshPath + 'lighterLong.glb',
           meshPath + 'lighterCasual.glb'
-          ],
+        ],
         envMapMats: 'ALL', // apply random envmap to all materials
         // apply random noise texture to these materials:
         alterMapMats: ['PlasticRed', 'PlasticBlue', 'PlasticGreen'],
         materialsTweakers: {
-          'MetalSilver': function(mat){
+          'MetalSilver': function (mat) {
             // randomize metallic materials
             mat.reflectivity = 0.5 + 0.5 * Math.random();
             mat.metalness = 0.7 + 0.3 * Math.random();
             mat.roughness = 0.5 * Math.random();
             mat.envMapIntensity = 1 + 5 * Math.random();
           },
-          'Plastic': function(mat){
+          'Plastic': function (mat) {
             // randomize plastic materials
             mat.reflectivity = Math.random();
             mat.metalness = 0;
@@ -70,31 +70,44 @@ layers.push({
   varianceMin: 0.05,
   gain: 1.1,
   blurKernelSizePx: 7,
-  sizeSqrt: 128 });
+  sizeSqrt: 128
+});
 
 // hidden convolutional layers:
-layers.push({sizeSqrt: 128, connectivityUp: 'conv', sparsitySqrt: 8,
-  kernelsCountSqrt: 4, activation: activationConv});
+layers.push({
+  sizeSqrt: 128, connectivityUp: 'conv', sparsitySqrt: 8,
+  kernelsCountSqrt: 4, activation: activationConv
+});
 
-layers.push({connectivityUp: 'conv',
+layers.push({
+  connectivityUp: 'conv',
   sizeSqrt: 32, sparsitySqrt: 16,
   kernelsCountSqrt: 4,
   maxPooling: null,
-  activation: activation});
+  activation: activation
+});
 
 // hidden (almost) fully connected layers:
-layers.push({sizeSqrt: 16,
-  connectivityUp: 'full', shiftRGBAMode: 2, activation: activation});
+layers.push({
+  sizeSqrt: 16,
+  connectivityUp: 'full', shiftRGBAMode: 2, activation: activation
+});
 
-layers.push({sizeSqrt: 16,
-  connectivityUp: 'full', shiftRGBAMode: 2, activation: activation});
+layers.push({
+  sizeSqrt: 16,
+  connectivityUp: 'full', shiftRGBAMode: 2, activation: activation
+});
 
-layers.push({sizeSqrt: 16,
-  connectivityUp: 'full', shiftRGBAMode: 2, activation: activation});
+layers.push({
+  sizeSqrt: 16,
+  connectivityUp: 'full', shiftRGBAMode: 2, activation: activation
+});
 
 // output layer:
-layers.push({connectivityUp: 'full', clampOutput: "mask",
-  sizeSqrt: ObjectDetectionTrainer.compute_outputSize(objects.length), activation: 'copy'});
+layers.push({
+  connectivityUp: 'full', clampOutput: "mask",
+  sizeSqrt: ObjectDetectionTrainer.compute_outputSize(objects.length), activation: 'copy'
+});
 
 
 
@@ -107,8 +120,8 @@ const dxMax = 0.3;  // max translation along X axis. relative. 1 -> full viewpor
 const dyMax = 0.15; // max translation along Y axis. relative. 1 -> full viewport height
 const dsMax = 0.3;  // max scale delta 
 const phiRange = [20, 120]; // Pitch in degrees:
-                            // 1st value: when looking down. 0 -> aligned to vt axis (-Y)
-                            // 2nd value: when looking up. 180 -> aligned to vt axis (+Y)
+// 1st value: when looking down. 0 -> aligned to vt axis (-Y)
+// 2nd value: when looking up. 180 -> aligned to vt axis (+Y)
 
 // build the neural net:
 const net = new NeuronNetwork({
@@ -124,17 +137,19 @@ const net = new NeuronNetwork({
 const preprocessingPipeline = new ImageTransformPipeline([
   {
     passType: 'drawBackgroundImage',
-    options: {imageSets: [
-      {
-        imagePath: 'trainingData/images/random/',
-        imagePrefix: 'output_',
-        count: 2,
-        scaleRange: [0.03, 0.2],
-        scalePow: 2,
-        probability: 1
-      }
-    ]}
-  },{
+    options: {
+      imageSets: [
+        {
+          imagePath: 'trainingData/images/random/',
+          imagePrefix: 'output_',
+          count: 2,
+          scaleRange: [0.03, 0.2],
+          scalePow: 2,
+          probability: 1
+        }
+      ]
+    }
+  }, {
     passType: 'shiftLuminosity',
     options: {
       luminosityShiftRange: [0.5, 1.5]
@@ -153,7 +168,7 @@ const preprocessingPipeline = new ImageTransformPipeline([
     options: {
       radiusRange: [1, 8]
     }
-  },{
+  }, {
     passType: 'shiftGamma',
     options: {
       gammaShiftRange: [-0.4, 0.4]// negative -> brighter
@@ -164,7 +179,7 @@ const preprocessingPipeline = new ImageTransformPipeline([
     options: {
       luminosityShiftRange: [0.5, 1.5]
     }
-  },{
+  }, {
     passType: 'invertColors',
     probability: 0.3
   }]);
@@ -186,9 +201,9 @@ const postprocessingPipeline = new ImageTransformPipeline([
   {
     passType: 'shiftHue',
     options: {
-      angleMaxRad: 3.14/6.0
+      angleMaxRad: 3.14 / 6.0
     }
-  }, 
+  },
   {
     passType: 'blur',
     probability: 0.2,
@@ -200,7 +215,7 @@ const postprocessingPipeline = new ImageTransformPipeline([
 
 // some random textures:
 const randomTextures = [
-  {image: 'trainingData/images/random/output_*.png', n: 2, scaleRange: [0.03, 0.3], scalePow: 2},
+  { image: 'trainingData/images/random/output_*.png', n: 2, scaleRange: [0.03, 0.3], scalePow: 2 },
 ];
 
 // CREATE THE PROBLEM:
@@ -215,7 +230,7 @@ const problem = new Problem({
     phiRange: phiRange, // zenith angle of the camera. First value: when looking down. 0-> aligned to vt axis. second value: when looking hzt
     translationScalingFactors: [dxMax, dyMax, dsMax],
     translationScalingFactorsDistributions: ['uniform', 'uniform', 'uniform'],
-    rotZ: {max: rotZMax, nSigmas: 4}, // in degrees - gaussian distribution
+    rotZ: { max: rotZMax, nSigmas: 4 }, // in degrees - gaussian distribution
 
     // rendering output:
     width: 512, // rendering resolution in pixels
@@ -230,7 +245,7 @@ const problem = new Problem({
     pointLightMaxIntensity: 1,
     envMaps: true,
     noiseTextures: randomTextures,
-    
+
     // statistics:
     positiveProbability: (settings.debug) ? 1 : 0.7,
     detectedObjScoreMin: 0.5,
@@ -252,7 +267,7 @@ const trainer = new Trainer({
   testsCount: 5000,
   testMinibatchsInterval: 10000,
   cost: 'quadratic',
-  
+
   SGDLearningRate: 0.05,
   SGDLearningRatePeriod: 1000000,
   SGDMomentum: 0.7,
