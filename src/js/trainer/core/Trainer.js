@@ -855,6 +855,19 @@ Trainer.pause = function(){
 };
 
 
+Trainer.error = function(){
+  // called when context is lost for example
+  Trainer.state = Trainer.states.error;
+  if (Trainer.is_UIEnabled()){
+    UI.set_status('error');
+  }
+  //PRECOMPILER_BEGINLOG
+  console.log('INFO in Trainer.js: ERROR');
+  //PRECOMPILER_ENDLOG
+  return true;
+};
+
+
 Trainer.step = function(){
   if (!Trainer.is_running() && !Trainer.is_pause){
     return false;
@@ -863,7 +876,9 @@ Trainer.step = function(){
     Trainer.pause();
   }
   Trainer.state = Trainer.states.running;
+  //PRECOMPILER_BEGINLOG
   console.log('INFO in Trainer.js: STEP');
+  //PRECOMPILER_ENDLOG
   Trainer.prototype.current.resume(true);
 
   Trainer.pause();
@@ -874,7 +889,10 @@ Trainer.step = function(){
 Trainer.init = function(){
   if (!Context.init({
       onContextLost: function(){
-        Trainer.pause();
+        //PRECOMPILER_BEGINLOG
+        console.log('ERROR: WebGL Context Lost. Open chrome://gpu for more info');
+        //PRECOMPILER_ENDLOG
+        Trainer.error();
       }
     })){
       return false;
@@ -945,5 +963,5 @@ Trainer.get_infos = function(){
 }
 
 Trainer['APP'] = 'WebAR.rocks.train';
-Trainer['VERSION'] = '1.0.0';
+Trainer['VERSION'] = '1.0.1';
 window['Trainer'] = Trainer;

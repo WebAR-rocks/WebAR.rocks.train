@@ -47,6 +47,7 @@ const UIControls = (function() {
     let enabledButtons = null;
     switch(Trainer.state){
       case Trainer.states.loading:
+      case Trainer.states.error:
         enabledButtons = [];
         break;
       case Trainer.states.notLoaded:

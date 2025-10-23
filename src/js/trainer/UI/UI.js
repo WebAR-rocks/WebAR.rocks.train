@@ -127,7 +127,7 @@ const UI = (function() {
       DOMSelector: '#Logger'
     });
     const trainerApp = Trainer['APP'] || 'NNGL';
-    console.log('Welcome to ' + trainerApp + ' v' + Trainer['VERSION'] + 'Integrated Training Environment');
+    console.log('Welcome to ' + trainerApp + ' v' + Trainer['VERSION'] + ' Integrated Training Environment');
     console.log('Copyright (c) 2020 WebAR.rocks');
     Logger.log_rawText(`  ██╗    ██╗███████╗██████╗  █████╗ ██████╗           
   ██║    ██║██╔════╝██╔══██╗██╔══██╗██╔══██╗          

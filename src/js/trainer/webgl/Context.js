@@ -86,7 +86,11 @@ const Context = (function() {
       GL.disable(GL['SAMPLE_COVERAGE']);
 
       if (GL['GENERATE_MIPMAP_HINT']){ // high precision mipmap gen
-        GL['hint'](GL['GENERATE_MIPMAP_HINT'], GL['NICEST']);
+        //GL['hint'](GL['GENERATE_MIPMAP_HINT'], GL['NICEST']);
+
+        // 2025-10-25 - from trainer 1.5.2 - GL.NICEST most may use more complicated filter than box filter
+        // so the mipmap computation may not match the mean
+        GL['hint'](GL['GENERATE_MIPMAP_HINT'], GL['FASTEST']);
       }
     },
 
