@@ -46,6 +46,7 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
     aspectRatio: -1
   }
   let _positiveProbability = 0;
+  let _isFatalError = false;
 
   const _noiseTextures = [];
 
@@ -444,6 +445,9 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
   }
 
   function setup_mesh(meshURL, threeMesh, trainingSet){
+    if (_isFatalError){
+      return;
+    }
     lib_three.reset_texturesEncoding(threeMesh);
 
     if (typeof(trainingSet.enablePBR)!=='undefined' && !trainingSet.enablePBR){
@@ -1412,8 +1416,18 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
       // build loading manager:
       _three.loadingManager = new THREE.LoadingManager();
       _three.loadingManager.onLoad = function(){
+        if (_isFatalError){
+          return;
+        }
         console.log('INFO in ObjectDetectionTrainer: _three.loadingManager has loaded everything');
         check_isLoaded('THREE');
+      }
+      _three.loadingManager.onError = function(err){
+        if (_isFatalError){
+          return;
+        }
+        _isFatalError = true;
+        console.log('ERROR in ObjectDetectionTrainer: ' + err + ' not found');
       }
       
        // build the scene:
