@@ -58,14 +58,20 @@ const GraphTests = (function() {
       let _lightness = 0;
       _ctx.fillStyle = get_htmlBlue(0); 
       
-      // draw horizontal grid lines:
+      // draw grid lines:
       _ctx.strokeStyle = '#888888';
-      _ctx.lineWidth = 1;
+      _ctx.lineWidth = 0.5;
       _ctx.beginPath();
+      // hzt lines:
       for (let i=0; i<10; ++i){
         const y = Math.round(_spec.height*i/10);
         _ctx.moveTo(0,y);
         _ctx.lineTo(_spec.width, y);
+      }
+      // vt lines:
+      for (let x=0; x<_spec.width; x+=10*_spec.barWidth){
+        _ctx.moveTo(x,0);
+        _ctx.lineTo(x, _spec.height);
       }
       _ctx.stroke();
       
