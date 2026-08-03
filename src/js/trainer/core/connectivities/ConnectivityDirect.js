@@ -71,7 +71,7 @@ const ConnectivityDirect = (function() {
         'width': _size
       });
 
-      textures.bpWeightsDeltas = Texture.instance({
+      _textures.bpWeightsDeltas = Texture.instance({
         'isFloat': true,
         'isPot': true,
         'width': _size,
@@ -130,7 +130,7 @@ const ConnectivityDirect = (function() {
           // compute weights * deltas
           // deltas of the next layer are bind on channel 0
           Shaders.set('shp_bpWeightsDeltasDirect');
-          textures.bpWeightsDeltas.set_asRenderTargetVp();
+          _textures.bpWeightsDeltas.set_asRenderTargetVp();
           _textures.weights.bind_toSampler(1);
           VBO.draw_quad(true);
           Texture.unbind(2);

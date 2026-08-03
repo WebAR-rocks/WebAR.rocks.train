@@ -462,9 +462,15 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
       threeMesh.scale.multiplyScalar(scale);
     }
 
-    add_envMap(threeMesh, trainingSet.envMapMats);
-    alter_map(threeMesh, trainingSet.alterMapMats)
-    alter_bumpMap(threeMesh, trainingSet.alterBumpMapMats)
+    if (trainingSet.envMapMats){
+      add_envMap(threeMesh, trainingSet.envMapMats);
+    }
+    if (trainingSet.alterMapMats){
+      alter_map(threeMesh, trainingSet.alterMapMats);
+    }
+    if (trainingSet.alterBumpMapMats) {
+      alter_bumpMap(threeMesh, trainingSet.alterBumpMapMats);
+    }
 
     threeMesh.userData.thetaRange = [-Math.PI, Math.PI];
     if (trainingSet.thetaRange){

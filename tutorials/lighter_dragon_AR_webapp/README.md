@@ -119,6 +119,12 @@ We also recommend using Nvidia GeForce GPUs with proprietary drivers. WebAR.rock
    python -m SimpleHTTPServer
    ```
 
+   Alternatively, you can use `npx`:
+
+   ```bash
+   npx http-server . -p 8000
+   ```
+
 3. **Open WebAR.rocks.train:**  
    Open your web browser and go to:  
    [http://localhost:8000/trainer.html?code=Object3DLighter_0.js](http://localhost:8000/trainer.html?code=Object3DLighter_0.js)  
